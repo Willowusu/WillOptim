@@ -40,10 +40,14 @@ export default function PdfResizer() {
 
       pages.forEach((page) => {
         const { width, height } = page.getSize();
+        page.setSize(width * scaleFactor, height * scaleFactor);
         page.scale(scaleFactor, scaleFactor);
       });
 
-      const pdfBytes = await pdfDoc.save();
+      const pdfBytes = await pdfDoc.save({
+        useObjectStreams: true,
+        addDefaultPage: false,
+      });
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       setResizedBlob(blob);
     } catch (error) {
@@ -207,7 +211,17 @@ export default function PdfResizer() {
       </div>
 
       <div className="flex justify-between px-6 py-4 bg-bg-theme border-t border-border-theme text-[10px] font-bold text-text-sub uppercase tracking-widest">
-        <span>Standard: ISO 32000</span>
+        <div className="flex gap-4">
+          <span>Standard: ISO 32000</span>
+          {file && (
+            <span className="text-accent-theme">
+              {resizedBlob 
+                ? `${(file.size / 1024).toFixed(0)}KB → ${(resizedBlob.size / 1024).toFixed(0)}KB`
+                : `${(file.size / 1024).toFixed(0)}KB`
+              }
+            </span>
+          )}
+        </div>
         <span>Secure: Yes</span>
       </div>
     </section>

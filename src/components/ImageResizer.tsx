@@ -250,7 +250,17 @@ export default function ImageResizer() {
       </div>
 
       <div className="flex justify-between px-6 py-4 bg-bg-theme border-t border-border-theme text-[10px] font-bold text-text-sub uppercase tracking-widest">
-        <span>Processing: Browser GPU</span>
+        <div className="flex gap-4">
+          <span>Processing: Browser GPU</span>
+          {file && (
+            <span className="text-accent-theme">
+              {resizedImage 
+                ? `${(file.size / 1024).toFixed(0)}KB → ${(resizedImage.size / 1024).toFixed(0)}KB`
+                : `${(file.size / 1024).toFixed(0)}KB`
+              }
+            </span>
+          )}
+        </div>
         <span>Secure: Yes</span>
       </div>
     </section>
